@@ -53,13 +53,13 @@ class Window(BuildingElement):
             self.gather_element_properties()
 
         r_layer = thickness/thermal_conduc
-        c_layer = heat_capac*density*thickness  # *1000
+        #c_layer = heat_capac*density*thickness  # *1000
 
         for layer_count in r_layer:
             self.r1 += layer_count / self.area
 
-        for layer_count in c_layer:
-            self.c1 += layer_count
+        #for layer_count in c_layer:
+            #self.c1 += layer_count
 
     def replace_window(self, year_of_refurbishment, window_type=None):
         '''Replace a window, with a newer one.

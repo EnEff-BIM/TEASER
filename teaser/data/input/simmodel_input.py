@@ -48,18 +48,21 @@ def load_lib_sim_model(sim_api, t_prj):
                     _set_basic_data(t_ow, sb)
                 elif sb.type == 'SimSlab_Floor_InterzoneFloor':
                     t_ce = Ceiling(parent=t_tz)
-                    _set_basic_data(t_ow, sb)
+                    _set_basic_data(t_ce, sb)
+                    t_tz.area = t_ce.area
+                    t_tz.volume = t_ce.area * tz.height
                 elif sb.type == 'SimWall_Wall_Interior':
                     t_in = InnerWall(parent=t_tz)
                     _set_basic_data(t_in, sb)
                 elif sb.type == 'SimWindow_Window_Exterior':
                     t_win = Window(parent=t_tz)
                     _set_window_data(t_win, sb)
+    return t_prj
 
 
 def _set_basic_data(t_element, space_bound):
 
-    t_element.name = space_bound.name
+    t_element.name = space_bound.type
     t_element.area = space_bound.area
     t_element.tilt = space_bound.tilt
     t_element.orientation = space_bound.orientation
@@ -67,16 +70,16 @@ def _set_basic_data(t_element, space_bound):
     for i, lay in enumerate(space_bound.mapped_layer):
         t_lay = Layer(parent=t_element, id=i)
 
-        t_lay.thickness = lay.thickness
+        t_lay.thickness = lay.thickness/1000
         mat = Material(parent=t_lay)
         mat.name = lay.material.name
         mat.density = lay.material.density
         mat.thermal_conduc = lay.material.thermal_conduc
-        mat.heat_capac = lay.material.heat_capac
+        mat.heat_capac = lay.material.heat_capac/1000
 
 def _set_window_data(t_element, space_bound):
 
-    t_element.name = space_bound.name
+    t_element.name = space_bound.type
     t_element.area = space_bound.area
     t_element.tilt = space_bound.tilt
     t_element.orientation = space_bound.orientation
@@ -84,9 +87,7 @@ def _set_window_data(t_element, space_bound):
     for i, lay in enumerate(space_bound.mapped_layer):
         t_lay = Layer(parent=t_element, id=i)
 
-        t_lay.thickness = lay.thickness
+        t_lay.thickness = lay.thickness/1000
         mat = Material(parent=t_lay)
         mat.name = lay.material.name
-        mat.density = lay.material.density
         mat.thermal_conduc = lay.material.thermal_conduc
-        mat.heat_capac = lay.material.heat_capac
